@@ -6,6 +6,6 @@ export async function <%=path.post.operationId%>(<% if(path.requestSchema){%>dat
   return await request<<%= path.responseSchema%>>('<%= path.path%>'<% if(path.requestSchema){%>,data<%}%>);
 }
 
-export type <%=path.post.operationId%>_VO = <%= path.responseVO%>
+export type <%=path.post.operationId%>_VO = <%= path.responseVO%>;
 
 <%})%>
