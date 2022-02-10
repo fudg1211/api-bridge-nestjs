@@ -36,6 +36,7 @@ console.log(arg);
         result.requestSchema = '';
         result.requestRequired = '';
         result.responseSchema = 'any';
+        result.responseVO = 'any';
         var operationId = result.post.operationId.replace(/_(.)/, function (m, m1) {
             return m1.toUpperCase();
         });
@@ -48,6 +49,7 @@ console.log(arg);
         if (result.post.responses) {
             if (result.post.responses.default) {
                 result.responseSchema = 'Paths.' + operationId + '.Responses.Default';
+                result.responseVO = 'Paths.' + operationId + '.Responses.VO';
             }
             if (result.post.responses['201']) {
                 result.responseSchema = 'Paths.' + operationId + '.Responses.$201';

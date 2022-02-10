@@ -40,6 +40,7 @@ fetch('http://127.0.0.1:7001/api-json')
       result.requestSchema = '';
       result.requestRequired = '';
       result.responseSchema = 'any';
+      result.responseVO = 'any';
 
       const operationId = result.post.operationId.replace(/_(.)/, (m:string, m1:string) => {
         return m1.toUpperCase();
@@ -55,6 +56,7 @@ fetch('http://127.0.0.1:7001/api-json')
       if (result.post.responses) {
         if (result.post.responses.default) {
           result.responseSchema = 'Paths.' + operationId + '.Responses.Default';
+          result.responseVO = 'Paths.' + operationId + '.Responses.VO';
         }
         if (result.post.responses['201']) {
           result.responseSchema = 'Paths.' + operationId + '.Responses.$201';
