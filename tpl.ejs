@@ -1,0 +1,11 @@
+<% if(arg==='wx'){%>import { request } from 'xb-wx-request';<%}%>
+<% if(arg!=='wx'){%>import { Request as request, Config } from '@go/go-request';<%}%>
+
+<% paths.forEach(function(path){%>
+export async function <%=path.post.operationId%>(<% if(path.requestSchema){%>data<%=path.requestRequired%>: <%= path.requestSchema%><%}%>):Promise<<%= path.responseSchema%>>{
+  return await request<<%= path.responseSchema%>>('<%= path.path%>'<% if(path.requestSchema){%>,data<%}%>);
+}
+
+export type <%=path.post.operationId%>_res = <%= path.responseSchema%>
+
+<%})%>

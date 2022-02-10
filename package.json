@@ -1,0 +1,65 @@
+{
+  "_from": "api-bridge-nestjs@1.0.12",
+  "_id": "api-bridge-nestjs@1.0.12",
+  "_inBundle": false,
+  "_integrity": "sha512-pnta9d2Jnx76p7nP2OWgDekuBXMG+qUEUaUdrGqyfL3mSViqgsQymle87Z5tA626ejlz9lY6+IFZZ8V634e9iA==",
+  "_location": "/api-bridge-nestjs",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "api-bridge-nestjs@1.0.12",
+    "name": "api-bridge-nestjs",
+    "escapedName": "api-bridge-nestjs",
+    "rawSpec": "1.0.12",
+    "saveSpec": null,
+    "fetchSpec": "1.0.12"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "https://registry.npmmirror.com/api-bridge-nestjs/-/api-bridge-nestjs-1.0.12.tgz",
+  "_shasum": "499d1777f579798de89c297f04190aa3ac7139fc",
+  "_spec": "api-bridge-nestjs@1.0.12",
+  "_where": "/Users/fudongguang/git/dongguang/autoui-wx-static",
+  "author": {
+    "name": "huajian"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "cross-spawn": "^7.0.3",
+    "dtsgenerator": "^3.12.1",
+    "ejs": "^3.1.6",
+    "node-fetch": "^2.6.1"
+  },
+  "deprecated": false,
+  "description": "api-bridge",
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "@types/ejs": "^3.0.7",
+    "@types/node": "^16.4.10",
+    "@types/node-fetch": "^2.5.12",
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "typescript": "^4.3.5"
+  },
+  "keywords": [
+    "api-bridge"
+  ],
+  "license": "ISC",
+  "main": "dist/index.js",
+  "name": "api-bridge-nestjs",
+  "scripts": {
+    "testwx": "node dist/index.js wx",
+    "test": "node dist/index.js",
+    "build": "rm -rf src/api;npx tsc",
+    "tsc": "npx tsc --watch"
+  },
+  "version": "1.0.12",
+  "files": ["dist","src","tpl.ejs"]
+}
