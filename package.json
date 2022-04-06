@@ -30,6 +30,8 @@
     "cross-spawn": "^7.0.3",
     "dtsgenerator": "^3.12.1",
     "ejs": "^3.1.6",
+    "fs-extra": "^10.0.1",
+    "js-beautify": "^1.14.2",
     "node-fetch": "^2.6.1"
   },
   "deprecated": false,
@@ -37,6 +39,8 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
     "@types/ejs": "^3.0.7",
+    "@types/fs-extra": "^9.0.13",
+    "@types/js-beautify": "^1.13.3",
     "@types/node": "^16.4.10",
     "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^4.28.5",
@@ -58,8 +62,12 @@
     "testwx": "node dist/index.js wx",
     "test": "node dist/index.js",
     "build": "rm -rf src/api;npx tsc",
-    "tsc": "npx tsc --watch"
+    "tsc": "npx tsc --project ./tsconfig.json --watch"
   },
   "version": "1.0.12",
-  "files": ["dist","src","tpl.ejs"]
+  "files": [
+    "dist",
+    "src",
+    "tpl.ejs"
+  ]
 }
