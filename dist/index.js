@@ -36,7 +36,7 @@ exports.Build = exports.Config = void 0;
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-14 22:24:41
+ * @LastEditTime: 2022-04-14 22:44:16
  * @Description:
  */
 const node_fetch_1 = __importDefault(require("node-fetch"));
@@ -53,7 +53,7 @@ exports.Config = {
 };
 /** 临时目录*/
 const tempDir = __dirname + '/temp';
-let ResultSchema;
+let ResultSchema = { paths: {}, components: {} };
 exports.Build = {
     /** 源数据 */
     sourceData: '',
@@ -70,6 +70,7 @@ exports.Build = {
     initSource() {
         return __awaiter(this, void 0, void 0, function* () {
             let data = '';
+            debugger;
             if (exports.Config.remoteUrl) {
                 const response = yield (0, node_fetch_1.default)(exports.Config.remoteUrl);
                 data = yield response.text();
@@ -87,7 +88,7 @@ exports.Build = {
         return __awaiter(this, void 0, void 0, function* () {
             this.initDir();
             yield this.initSource();
-            ResultSchema.pahts = this.formatPaths();
+            ResultSchema.paths = this.formatPaths();
             ResultSchema.components = this.sourceData.components;
         });
     },
@@ -95,7 +96,7 @@ exports.Build = {
      * 格式化paths
      */
     formatPaths() {
-        let result;
+        let result = {};
         const paths = this.sourceData.paths;
         Object.keys(paths).forEach((key) => {
             var _a;
@@ -105,12 +106,13 @@ exports.Build = {
             if (!tag) {
                 return;
             }
-            schema.methodName = key.replace(tag, '');
+            schema.methodName = key.replace(tag, '').replace(/\//g, '');
             schema.description = path.description;
             schema.request = this.genRequestSchema(path.requestBody);
             schema.response = this.genResponseSchema(path.response);
             if (result[tag]) {
                 result[tag].push(schema);
+                return;
             }
             result[tag] = [schema];
         });

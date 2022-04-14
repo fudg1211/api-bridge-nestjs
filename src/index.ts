@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-14 22:24:41
+ * @LastEditTime: 2022-04-14 22:44:16
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -58,7 +58,7 @@ interface ComponentSchema{
 
 
 interface Schema {
-	pahts:{
+	paths:{
 		[key:string]:MethodSchema[]
 	},
 	components:{
@@ -66,7 +66,7 @@ interface Schema {
 	}
 }
 
-let ResultSchema:Schema;
+let ResultSchema:Schema = {paths:{},components:{}};
 
 
 
@@ -87,6 +87,7 @@ export const Build = {
 	async initSource() {
 		let data = '';
 
+		debugger
 		if (Config.remoteUrl) {
 			const response = await fetch(Config.remoteUrl);
 			data = await response.text();
@@ -101,7 +102,7 @@ export const Build = {
 	async init() {
 		this.initDir();
 		await this.initSource();
-		ResultSchema.pahts = this.formatPaths();
+		ResultSchema.paths = this.formatPaths();
 		ResultSchema.components = this.sourceData.components;
 	},
 
@@ -111,7 +112,7 @@ export const Build = {
 	formatPaths() {
 		let result:{
 			[key:string]:MethodSchema[]
-		};
+		}={};
 		const paths = this.sourceData.paths;
 		Object.keys(paths).forEach((key) => {
 			let schema: MethodSchema ={} as MethodSchema;
@@ -120,12 +121,13 @@ export const Build = {
 			if (!tag) {
 				return;
 			}
-			schema.methodName = key.replace(tag, '');
+			schema.methodName = key.replace(tag, '').replace(/\//g,'');
 			schema.description = path.description;
 			schema.request = this.genRequestSchema(path.requestBody);
 			schema.response = this.genResponseSchema(path.response);
 			if(result[tag]){
 				result[tag].push(schema);
+				return;
 			}
 			result[tag] = [schema];
 		});
