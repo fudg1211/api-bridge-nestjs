@@ -62,13 +62,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-06 23:09:20
+ * @LastEditTime: 2022-04-07 22:56:23
  * @Description:
  */
 var node_fetch_1 = __importDefault(require("node-fetch"));
 var fs = __importStar(require("fs-extra"));
-var cross_spawn_1 = __importDefault(require("cross-spawn"));
-var beautify = __importStar(require("js-beautify"));
 var Config = {
     /** 输出目录 */
     outputDir: process.cwd() + '/src/api',
@@ -90,7 +88,7 @@ var Build = {
         fs.mkdirpSync(Config.tempDir);
     },
     /**
-     * 初始化源文件
+     * 下载源文件
      */
     initSource: function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -122,21 +120,10 @@ var Build = {
                         return [4 /*yield*/, this.initSource()];
                     case 1:
                         _a.sent();
-                        this.genDts();
                         return [2 /*return*/];
                 }
             });
         });
-    },
-    /** 生成dts文件 */
-    genDts: function () {
-        cross_spawn_1.default.sync('./node_modules/dtsgenerator/bin/dtsgen', [Config.sourceFile, '-o', Config.dtsFile], { stdio: 'inherit' });
-        var sourceData = fs.readFileSync(Config.dtsFile);
-        var str = sourceData.toString().replace(/declare\snamespace\sPaths[\s\S]+$/, '');
-        str = str.replace(/^[\s\S]+namespace\sSchemas\s\{\n/, '');
-        str = str.replace(/\}\s*\n\s*\}\s*\n/, '');
-        str = str.replace(/(\s\s)/g, '');
-        fs.writeFileSync(Config.dtsFile, beautify.js(str, { indent_size: 4, space_in_empty_paren: true }));
     },
     /**
      * 格式化paths

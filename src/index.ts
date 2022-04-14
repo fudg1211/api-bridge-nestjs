@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-06 23:09:20
+ * @LastEditTime: 2022-04-07 22:56:23
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -34,7 +34,7 @@ const Build = {
 		fs.mkdirpSync(Config.tempDir);
 	},
 	/**
-	 * 初始化源文件
+	 * 下载源文件
 	 */
 	async initSource() {
 		const response = await fetch('http://127.0.0.1:7001/api-json');
@@ -48,22 +48,6 @@ const Build = {
 	async init() {
 		this.initDir();
 		await this.initSource();
-		this.genDts();
-	},
-
-	/** 生成dts文件 */
-	genDts(){
-		spawn.sync(
-			'./node_modules/dtsgenerator/bin/dtsgen',
-			[Config.sourceFile, '-o', Config.dtsFile],
-			{ stdio: 'inherit' }
-		);
-		const sourceData = fs.readFileSync(Config.dtsFile);
-		let str = sourceData.toString().replace(/declare\snamespace\sPaths[\s\S]+$/,'');
-		str = str.replace(/^[\s\S]+namespace\sSchemas\s\{\n/,'');
-		str = str.replace(/\}\s*\n\s*\}\s*\n/,'');
-		str = str.replace(/(\s\s)/g,'');
-		fs.writeFileSync(Config.dtsFile,beautify.js(str,{ indent_size: 4, space_in_empty_paren: true }));
 	},
 
 	/**
