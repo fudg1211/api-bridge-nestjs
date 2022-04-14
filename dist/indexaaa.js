@@ -9,35 +9,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @LastEditors: huajian
  * @LastEditTime: 2021-08-18 23:08:55
  */
-var node_fetch_1 = __importDefault(require("node-fetch"));
-var fs_1 = __importDefault(require("fs"));
-var ejs_1 = __importDefault(require("ejs"));
-var cross_spawn_1 = __importDefault(require("cross-spawn"));
-var path = require('path');
-var outputDir = process.cwd() + '/src/api';
-var outputJsonFile = outputDir + '/api-json.json';
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const fs_1 = __importDefault(require("fs"));
+const ejs_1 = __importDefault(require("ejs"));
+const cross_spawn_1 = __importDefault(require("cross-spawn"));
+const path = require('path');
+const outputDir = process.cwd() + '/src/api';
+const outputJsonFile = outputDir + '/api-json.json';
 if (!fs_1.default.existsSync(outputDir)) {
     fs_1.default.mkdirSync(outputDir);
 }
-var arg = process.argv.splice(2)[0];
+const arg = process.argv.splice(2)[0];
 console.log(arg);
 (0, node_fetch_1.default)('http://127.0.0.1:7001/api-json')
-    .then(function (res) { return res.text(); })
-    .then(function (body) {
+    .then((res) => res.text())
+    .then((body) => {
     fs_1.default.writeFileSync(outputJsonFile, body);
     cross_spawn_1.default.sync('./node_modules/dtsgenerator/bin/dtsgen', [outputJsonFile, '-o', outputDir + '/api-bridge.d.ts'], { stdio: 'inherit' });
-    var contentBuf = fs_1.default.readFileSync(outputDir + '/api-bridge.d.ts');
-    var content = contentBuf.toString().replace(/export\stype\sDefault\s=\s([^\[\n]+)((\[\]){0,1})/g, function ($0, $1, $2) { return $2 ? $0 + '\n          export type VO = ' + $1 : $0 + '\n          export type VO = Default'; });
+    const contentBuf = fs_1.default.readFileSync(outputDir + '/api-bridge.d.ts');
+    const content = contentBuf.toString().replace(/export\stype\sDefault\s=\s([^\[\n]+)((\[\]){0,1})/g, ($0, $1, $2) => { return $2 ? $0 + '\n          export type VO = ' + $1 : $0 + '\n          export type VO = Default'; });
     fs_1.default.writeFileSync(outputDir + '/api-bridge.d.ts', content);
-    var json = JSON.parse(body);
-    var paths = Object.keys(json.paths).map(function (path) {
-        var result = json.paths[path];
+    const json = JSON.parse(body);
+    const paths = Object.keys(json.paths).map((path) => {
+        const result = json.paths[path];
         result.path = path;
         result.requestSchema = '';
         result.requestRequired = '';
         result.responseSchema = 'any';
         result.responseVO = 'any';
-        var operationId = result.post.operationId.replace(/_(.)/, function (m, m1) {
+        const operationId = result.post.operationId.replace(/_(.)/, (m, m1) => {
             return m1.toUpperCase();
         });
         // 验证是否有有参数
@@ -57,7 +57,7 @@ console.log(arg);
         }
         return result;
     });
-    ejs_1.default.renderFile(path.resolve(__dirname, '../tpl.ejs'), { paths: paths, arg: arg }, function (err, str) {
+    ejs_1.default.renderFile(path.resolve(__dirname, '../tpl.ejs'), { paths, arg }, (err, str) => {
         if (err) {
             console.log(err);
             return;

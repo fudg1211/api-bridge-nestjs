@@ -27,123 +27,139 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Build = exports.Config = void 0;
 /*
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-07 22:56:23
+ * @LastEditTime: 2022-04-14 22:24:41
  * @Description:
  */
-var node_fetch_1 = __importDefault(require("node-fetch"));
-var fs = __importStar(require("fs-extra"));
-var Config = {
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const fs = __importStar(require("fs-extra"));
+exports.Config = {
     /** 输出目录 */
     outputDir: process.cwd() + '/src/api',
-    /** 临时目录*/
-    tempDir: __dirname + '/temp',
     /** 数据源文件  */
     sourceFile: __dirname + '/temp/api.json',
+    /** 远程地址 */
+    remoteUrl: '',
     /** 声明文件 */
     dtsFile: process.cwd() + '/src/api/dts.ts',
 };
-var Build = {
+/** 临时目录*/
+const tempDir = __dirname + '/temp';
+let ResultSchema;
+exports.Build = {
     /** 源数据 */
     sourceData: '',
     /** 准备目录 */
-    initDir: function () {
-        fs.removeSync(Config.outputDir);
-        fs.mkdirpSync(Config.outputDir);
-        fs.removeSync(Config.tempDir);
-        fs.mkdirpSync(Config.tempDir);
+    initDir() {
+        fs.removeSync(exports.Config.outputDir);
+        fs.mkdirpSync(exports.Config.outputDir);
+        fs.removeSync(tempDir);
+        fs.mkdirpSync(tempDir);
     },
     /**
      * 下载源文件
      */
-    initSource: function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var response, data;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, (0, node_fetch_1.default)('http://127.0.0.1:7001/api-json')];
-                    case 1:
-                        response = _a.sent();
-                        return [4 /*yield*/, response.text()];
-                    case 2:
-                        data = _a.sent();
-                        this.sourceData = JSON.parse(data);
-                        fs.writeFileSync(Config.sourceFile, data);
-                        return [2 /*return*/];
-                }
-            });
+    initSource() {
+        return __awaiter(this, void 0, void 0, function* () {
+            let data = '';
+            if (exports.Config.remoteUrl) {
+                const response = yield (0, node_fetch_1.default)(exports.Config.remoteUrl);
+                data = yield response.text();
+            }
+            else {
+                data = fs.readFileSync(exports.Config.sourceFile).toString().replace(/\$ref/, 'ref').replace(/#\/components\/schemas\//g, '');
+            }
+            this.sourceData = JSON.parse(data);
         });
     },
     /**
      * 初始化
      */
-    init: function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.initDir();
-                        return [4 /*yield*/, this.initSource()];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
+    init() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.initDir();
+            yield this.initSource();
+            ResultSchema.pahts = this.formatPaths();
+            ResultSchema.components = this.sourceData.components;
         });
     },
     /**
      * 格式化paths
      */
-    formatPaths: function () {
-        var paths = this.sourceData.paths;
-        Object.keys(paths).forEach(function (key) {
+    formatPaths() {
+        let result;
+        const paths = this.sourceData.paths;
+        Object.keys(paths).forEach((key) => {
             var _a;
-            var path = paths[key].post;
-            var tag = (_a = path.tags) === null || _a === void 0 ? void 0 : _a[0];
+            let schema = {};
+            const path = paths[key].post;
+            const tag = (_a = path.tags) === null || _a === void 0 ? void 0 : _a[0];
+            if (!tag) {
+                return;
+            }
+            schema.methodName = key.replace(tag, '');
+            schema.description = path.description;
+            schema.request = this.genRequestSchema(path.requestBody);
+            schema.response = this.genResponseSchema(path.response);
+            if (result[tag]) {
+                result[tag].push(schema);
+            }
+            result[tag] = [schema];
         });
+        return result;
     },
-    getSchema: function (data) {
+    /**
+     * 获取request body请求
+     * @param body
+     * @returns
+     */
+    genRequestSchema(body) {
+        try {
+            const content = body.content['application/json'].schema;
+            let schema = {};
+            schema.type = content.type;
+            schema.ref = content.ref;
+            schema.required = body.required;
+            schema.description = body.content.description;
+            return schema;
+        }
+        catch (err) {
+            console.log('genRequestBody', err);
+        }
+    },
+    /**
+     * 获取request body请求
+     * @param body
+     * @returns
+     */
+    genResponseSchema(res) {
+        try {
+            const content = res.default.content['application/json'].schema;
+            let schema = {};
+            schema.type = content.type;
+            schema.ref = content['$ref'].replace('#/components/schemas/', '');
+            schema.required = res.default.required;
+            return schema;
+        }
+        catch (err) {
+            console.log('genResponseSchema', err);
+        }
+    },
+    getSchema(data) {
         return {
             required: data.required,
             schema: data.content['application/json'].schema
         };
     }
 };
-Build.init();
 // const arg = process.argv.splice(2)[0];
 // console.log(arg);
 // fetch('http://127.0.0.1:7001/api-json')

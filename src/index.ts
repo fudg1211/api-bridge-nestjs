@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-07 22:56:23
+ * @LastEditTime: 2022-04-14 22:24:41
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -12,35 +12,88 @@ import spawn from 'cross-spawn';
 import * as beautify from 'js-beautify';
 import * as path from 'path';
 
-const Config = {
+export const Config = {
 	/** 输出目录 */
 	outputDir: process.cwd() + '/src/api',
-	/** 临时目录*/
-	tempDir: __dirname + '/temp',
 	/** 数据源文件  */
 	sourceFile: __dirname + '/temp/api.json',
+	/** 远程地址 */
+	remoteUrl: '',
 	/** 声明文件 */
-	dtsFile:process.cwd() + '/src/api/dts.ts',
+	dtsFile: process.cwd() + '/src/api/dts.ts',
 }
 
-const Build = {
+/** 临时目录*/
+const tempDir = __dirname + '/temp';
+
+interface IOSchema {
+	name: string;
+	description?:string;
+	type?: string;
+	ref?: string;
+	required: boolean;
+	enum?: any[];
+}
+
+interface MethodSchema {
+	/** 方法名称 */
+	methodName: string;
+	/** 方法描述 */
+	description?: string,
+	/** 请求Schema */
+	request?: IOSchema;
+	/** 返回Schema */
+	response?: IOSchema;
+}
+
+interface ComponentSchema{
+	type:string,
+	properties:{
+		[key:string]:{
+			type:string,
+			items?:{}
+		}		
+	}
+}
+
+
+interface Schema {
+	pahts:{
+		[key:string]:MethodSchema[]
+	},
+	components:{
+		[key:string]:ComponentSchema
+	}
+}
+
+let ResultSchema:Schema;
+
+
+
+
+export const Build = {
 	/** 源数据 */
-	sourceData:'',
+	sourceData: '',
 	/** 准备目录 */
 	initDir() {
 		fs.removeSync(Config.outputDir);
 		fs.mkdirpSync(Config.outputDir);
-		fs.removeSync(Config.tempDir)
-		fs.mkdirpSync(Config.tempDir);
+		fs.removeSync(tempDir);
+		fs.mkdirpSync(tempDir);
 	},
 	/**
 	 * 下载源文件
 	 */
 	async initSource() {
-		const response = await fetch('http://127.0.0.1:7001/api-json');
-		const data = await response.text();
+		let data = '';
+
+		if (Config.remoteUrl) {
+			const response = await fetch(Config.remoteUrl);
+			data = await response.text();
+		} else {
+			data = fs.readFileSync(Config.sourceFile).toString().replace(/\$ref/,'ref').replace(/#\/components\/schemas\//g,'');
+		}
 		this.sourceData = JSON.parse(data);
-		fs.writeFileSync(Config.sourceFile, data);
 	},
 	/**
 	 * 初始化
@@ -48,29 +101,84 @@ const Build = {
 	async init() {
 		this.initDir();
 		await this.initSource();
+		ResultSchema.pahts = this.formatPaths();
+		ResultSchema.components = this.sourceData.components;
 	},
 
 	/**
 	 * 格式化paths
 	 */
-	formatPaths(){
+	formatPaths() {
+		let result:{
+			[key:string]:MethodSchema[]
+		};
 		const paths = this.sourceData.paths;
-		Object.keys(paths).forEach((key)=>{
+		Object.keys(paths).forEach((key) => {
+			let schema: MethodSchema ={} as MethodSchema;
 			const path = paths[key].post;
 			const tag = path.tags?.[0];
-			
-		})
+			if (!tag) {
+				return;
+			}
+			schema.methodName = key.replace(tag, '');
+			schema.description = path.description;
+			schema.request = this.genRequestSchema(path.requestBody);
+			schema.response = this.genResponseSchema(path.response);
+			if(result[tag]){
+				result[tag].push(schema);
+			}
+			result[tag] = [schema];
+		});
+		return result;
 	},
 
-	getSchema(data:any){
+
+	/**
+	 * 获取request body请求
+	 * @param body 
+	 * @returns 
+	 */
+	genRequestSchema(body?: any): IOSchema {
+		try {
+			const content = body.content['application/json'].schema;
+			let schema: IOSchema = {} as IOSchema;
+			schema.type = content.type;
+			schema.ref = content.ref;
+			schema.required = body.required;
+			schema.description = body.content.description;
+			return schema;
+		} catch (err) {
+			console.log('genRequestBody', err);
+		}
+	},
+
+
+	/**
+	 * 获取request body请求
+	 * @param body 
+	 * @returns 
+	 */
+	genResponseSchema(res?: any): IOSchema {
+		try {
+			const content = res.default.content['application/json'].schema;
+			let schema: IOSchema ={} as IOSchema;
+			schema.type = content.type;
+			schema.ref = content['$ref'].replace('#/components/schemas/','');
+			schema.required = res.default.required;
+			return schema;
+		} catch (err) {
+			console.log('genResponseSchema', err);
+		}
+	},
+
+
+	getSchema(data: any) {
 		return {
-			required:data.required,
-			schema:data.content['application/json'].schema
+			required: data.required,
+			schema: data.content['application/json'].schema
 		}
 	}
 };
-
-Build.init();
 
 // const arg = process.argv.splice(2)[0];
 // console.log(arg);
