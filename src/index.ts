@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-16 15:55:17
+ * @LastEditTime: 2022-04-16 16:08:47
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -18,10 +18,7 @@ export const Config = {
 	tplFile: (new URL('../tpl.ejs',import.meta.url)).pathname,
 	/** 远程地址 */
 	remoteUrl: 'http://127.0.0.1:7001/api-json',
-	apis: [
-		'/mall/home/getItemList',
-		'/mall/station/save',
-	]
+	apis: []
 }
 
 // 执行参数

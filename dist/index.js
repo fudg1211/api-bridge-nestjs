@@ -7,10 +7,7 @@ export const Config = {
     outputDir: process.cwd() + '/src/api',
     tplFile: (new URL('../tpl.ejs', import.meta.url)).pathname,
     remoteUrl: 'http://127.0.0.1:7001/api-json',
-    apis: [
-        '/mall/home/getItemList',
-        '/mall/station/save',
-    ]
+    apis: []
 };
 const arg = process.argv.splice(2)[0];
 export const Build = {
