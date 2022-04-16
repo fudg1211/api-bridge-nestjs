@@ -1,27 +1,4 @@
 {
-  "_from": "api-bridge-nestjs@1.0.12",
-  "_id": "api-bridge-nestjs@1.0.12",
-  "_inBundle": false,
-  "_integrity": "sha512-pnta9d2Jnx76p7nP2OWgDekuBXMG+qUEUaUdrGqyfL3mSViqgsQymle87Z5tA626ejlz9lY6+IFZZ8V634e9iA==",
-  "_location": "/api-bridge-nestjs",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "api-bridge-nestjs@1.0.12",
-    "name": "api-bridge-nestjs",
-    "escapedName": "api-bridge-nestjs",
-    "rawSpec": "1.0.12",
-    "saveSpec": null,
-    "fetchSpec": "1.0.12"
-  },
-  "_requiredBy": [
-    "#DEV:/"
-  ],
-  "_resolved": "https://registry.npmmirror.com/api-bridge-nestjs/-/api-bridge-nestjs-1.0.12.tgz",
-  "_shasum": "499d1777f579798de89c297f04190aa3ac7139fc",
-  "_spec": "api-bridge-nestjs@1.0.12",
-  "_where": "/Users/fudongguang/git/dongguang/autoui-wx-static",
   "author": {
     "name": "huajian"
   },
@@ -32,7 +9,9 @@
     "ejs": "^3.1.6",
     "fs-extra": "^10.0.1",
     "js-beautify": "^1.14.2",
-    "node-fetch": "^2.6.1"
+    "json-schema-to-typescript": "^10.1.5",
+    "node-fetch": "^2.6.1",
+    "openapi-typescript": "^5.2.0"
   },
   "deprecated": false,
   "description": "api-bridge",
@@ -50,7 +29,8 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "@go/go-request": "git+ssh://git@git.hipac.cn:dongguang/go-request.git#master"
   },
   "keywords": [
     "api-bridge"
@@ -58,6 +38,7 @@
   "license": "ISC",
   "main": "dist/index.js",
   "name": "api-bridge-nestjs",
+  "type": "module",
   "scripts": {
     "testwx": "node dist/index.js wx",
     "test": "node dist/index.js",
