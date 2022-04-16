@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
-import * as fs from 'fs/promises';
+import fs from 'fs/promises';
 import ejs from 'ejs';
-import * as path from 'path';
+import path from 'path';
+import clc from 'cli-color';
 import openapiTS from "openapi-typescript";
 export const Config = {
     outputDir: process.cwd() + '/src/api',
@@ -24,6 +25,7 @@ export const Build = {
         this.sourceData = JSON.parse(data);
     },
     async init() {
+        console.log(clc.blueBright('api bridge start...'));
         await this.initDir();
         await this.initSource();
         const output = await openapiTS(this.sourceData);
@@ -31,11 +33,11 @@ export const Build = {
         await this.genApiFile();
     },
     async genApiFile() {
-        const tplStr = await fs.readFile(Config.tplFile, { encoding: 'utf-8' });
         import(process.cwd() + '/api.config.js').then(async (res) => {
             const apis = res.default;
             for (let i = 0; i < apis.length; i++) {
                 const api = apis[i];
+                console.log(clc.blue('gen ' + api));
                 const apiName = path.basename(api);
                 const apiFile = apiName + '.ts';
                 const apiPath = path.resolve(Config.outputDir, '.' + api, '..');

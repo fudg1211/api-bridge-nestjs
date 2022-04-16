@@ -6,6 +6,7 @@
 	},
 	"bundleDependencies": false,
 	"dependencies": {
+		"cli-color": "^2.0.2",
 		"cross-spawn": "^7.0.3",
 		"dtsgenerator": "^3.12.1",
 		"ejs": "^3.1.6",
@@ -18,6 +19,8 @@
 	"deprecated": false,
 	"description": "api-bridge",
 	"devDependencies": {
+		"@go/go-request": "git+ssh://git@git.hipac.cn:dongguang/go-request.git#master",
+		"@types/cli-color": "^2.0.2",
 		"@types/cross-spawn": "^6.0.2",
 		"@types/ejs": "^3.0.7",
 		"@types/fs-extra": "^9.0.13",
@@ -31,8 +34,7 @@
 		"eslint-plugin-import": "^2.23.4",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-promise": "^5.1.0",
-		"typescript": "^4.3.5",
-		"@go/go-request": "git+ssh://git@git.hipac.cn:dongguang/go-request.git#master"
+		"typescript": "^4.3.5"
 	},
 	"keywords": [
 		"api-bridge"
