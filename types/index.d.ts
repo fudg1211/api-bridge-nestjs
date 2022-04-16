@@ -2,7 +2,6 @@ export declare const Config: {
     outputDir: string;
     tplFile: string;
     remoteUrl: string;
-    apis: never[];
 };
 export declare const Build: {
     sourceData: string;
