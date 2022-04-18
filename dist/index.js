@@ -57,4 +57,5 @@ export const Build = {
         });
     }
 };
+Build.init();
 //# sourceMappingURL=index.js.map

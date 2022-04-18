@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-16 18:21:54
+ * @LastEditTime: 2022-04-18 11:58:47
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -80,3 +80,5 @@ export const Build = {
 		})
 	}
 };
+
+Build.init();
