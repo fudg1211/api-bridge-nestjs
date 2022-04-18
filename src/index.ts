@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-18 11:58:47
+ * @LastEditTime: 2022-04-18 12:13:15
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -56,7 +56,7 @@ export const Build = {
 	},
 
 	async genApiFile() {
-		import(process.cwd()+'/api.config.js').then(async (res)=>{
+		import(process.cwd()+'/api.config.mjs').then(async (res)=>{
 			const apis = res.default;
 			for (let i = 0; i < apis.length; i++) {
 				const api = apis[i];

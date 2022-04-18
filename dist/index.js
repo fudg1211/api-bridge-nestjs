@@ -33,7 +33,7 @@ export const Build = {
         await this.genApiFile();
     },
     async genApiFile() {
-        import(process.cwd() + '/api.config.js').then(async (res) => {
+        import(process.cwd() + '/api.config.mjs').then(async (res) => {
             const apis = res.default;
             for (let i = 0; i < apis.length; i++) {
                 const api = apis[i];
