@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-18 12:13:15
+ * @LastEditTime: 2022-04-26 10:17:37
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -16,6 +16,7 @@ import openapiTS from "openapi-typescript";
 export const Config = {
 	/** 输出目录 */
 	outputDir: process.cwd() + '/src/api',
+	//模板地址
 	tplFile: (new URL('../tpl.ejs',import.meta.url)).pathname,
 	/** 远程地址 */
 	remoteUrl: 'http://127.0.0.1:7001/api-json'
