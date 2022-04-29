@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-29 18:36:15
+ * @LastEditTime: 2022-04-29 18:46:07
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -59,7 +59,6 @@ export const Build = {
 	async genApiFile(output) {
 		import(process.cwd()+'/api.config.mjs').then(async (res)=>{
 			const apis = res.default;
-			console.log(111,output)
 
 			for (let i = 0; i < apis.length; i++) {
 				const api = apis[i];
@@ -81,7 +80,6 @@ export const Build = {
 					responseSchemaVo: `Post['responses']['default']['content']['application/json']['list'][0]`,
 				};
 				ejs.renderFile(Config.tplFile, data,{}, (err, str) => {
-					console.log(1111,str);
 					fs.writeFile(path.resolve(apiPath, apiFile), str);
 				});
 			}
