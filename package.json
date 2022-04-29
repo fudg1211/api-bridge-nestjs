@@ -47,7 +47,7 @@
 		"start": "npx tsc --project ./tsconfig.json  --outDir ~/git/dongguang/my-vite-app/node_modules/api-bridge-nestjs/lib/ --watch"
 	},
 	"files": [
-		"dist",
+		"lib",
 		"src",
 		"tpl.ejs"
 	]
