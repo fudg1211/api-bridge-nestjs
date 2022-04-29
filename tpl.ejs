@@ -2,8 +2,12 @@
 <% if(arg!=='wx'){%>import { Request as request } from '@go/go-request';<%}%>
 import {paths} from '../../api';
 type Post = <%- PostSchema%>;
-export type RequestSchema = <%- requestSchema%>;
-export type ResponseSchema = <%- responseSchema%>;
-export async function <%-apiName%>(<% if(requestSchema){%>data: RequestSchema<%}%>):Promise<ResponseSchema>{
-	return await request<ResponseSchema>('<%- api%>'<% if(requestSchema){%>,data<%}%>);
+export type <%- to%> = <%- requestSchema%>;
+export type <%- res%> = <%- responseSchema%>;
+<% if(requestSchema){%>
+//只有接口名称包含List才会有此导出 apiName 符合此规则 /List$/
+export type <%- vo%> = <%- responseSchemaVo%>;
+<%}%>
+export async function <%-apiName%>(<% if(requestSchema){%>data: <%- to%><%}%>):Promise<<%- vo%>>{
+	return await request<<%- vo%>>('<%- api%>'<% if(requestSchema){%>,data<%}%>);
 }

@@ -43,10 +43,8 @@
 	"main": "dist/index.js",
 	"type": "module",
 	"scripts": {
-		"testwx": "node dist/index.js wx",
-		"test": "node dist/index.js",
-		"build": "rm -rf src/api;npx tsc",
-		"tsc": "npx tsc --project ./tsconfig.json --watch"
+		"lib": "rm -rf src/api;npx tsc",
+		"start": "npx tsc --project ./tsconfig.json  --outDir ~/git/dongguang/my-vite-app/node_modules/api-bridge-nestjs/lib/ --watch"
 	},
 	"files": [
 		"dist",

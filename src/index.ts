@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-26 10:17:37
+ * @LastEditTime: 2022-04-29 18:36:15
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -10,7 +10,7 @@ import fs from 'fs/promises';
 import ejs from 'ejs';
 import  path from 'path';
 import clc from 'cli-color';
-import openapiTS from "openapi-typescript";
+import openapiTS,{SchemaObject} from "openapi-typescript";
 
 
 export const Config = {
@@ -53,12 +53,14 @@ export const Build = {
 		await this.initSource();
 		const output = await openapiTS(this.sourceData);
 		await fs.writeFile(Config.outputDir + '/api.d.ts', output);
-		await this.genApiFile();
+		await this.genApiFile(output);
 	},
 
-	async genApiFile() {
+	async genApiFile(output) {
 		import(process.cwd()+'/api.config.mjs').then(async (res)=>{
 			const apis = res.default;
+			console.log(111,output)
+
 			for (let i = 0; i < apis.length; i++) {
 				const api = apis[i];
 				console.log(clc.blue('gen '+api));
@@ -70,11 +72,16 @@ export const Build = {
 					arg,
 					api,
 					apiName,
+					to:apiName+'Params',
+					res:apiName+'Res',
+					vo:/List$/.test(apiName)?apiName+'Vo':'',
 					PostSchema:`paths['${api}']['post']`,
 					requestSchema: `Post['requestBody']['content']['application/json']`,
-					responseSchema: `Post['responses']['default']['content']['application/json']`
+					responseSchema: `Post['responses']['default']['content']['application/json']`,
+					responseSchemaVo: `Post['responses']['default']['content']['application/json']['list'][0]`,
 				};
 				ejs.renderFile(Config.tplFile, data,{}, (err, str) => {
+					console.log(1111,str);
 					fs.writeFile(path.resolve(apiPath, apiFile), str);
 				});
 			}

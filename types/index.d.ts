@@ -8,5 +8,5 @@ export declare const Build: {
     initDir(): Promise<void>;
     initSource(): Promise<void>;
     init(): Promise<void>;
-    genApiFile(): Promise<void>;
+    genApiFile(output: any): Promise<void>;
 };
