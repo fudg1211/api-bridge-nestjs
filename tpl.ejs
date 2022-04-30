@@ -5,7 +5,7 @@ type Post = <%- PostSchema%>;
 export type <%- to%> = <%- requestSchema%>;
 export type <%- res%> = <%- responseSchema%>;
 <% if(vo){%>
-//只有接口名称包含List才会有此导出 apiName 符合此规则 /List$/
+//只有接口名称包含List才会有此导出 apiName 符合此规则 /List/
 export type <%- vo%> = <%- responseSchemaVo%>;
 <%}%>
 export async function <%-apiName%>(<% if(requestSchema){%>data: <%- to%><%}%>):Promise<<%- res%>>{

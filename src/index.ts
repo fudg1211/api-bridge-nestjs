@@ -2,7 +2,7 @@
  * @Author: huajian
  * @Date: 2022-04-06 21:48:10
  * @LastEditors: huajian
- * @LastEditTime: 2022-04-29 18:46:07
+ * @LastEditTime: 2022-04-30 10:53:18
  * @Description: 
  */
 import fetch from 'node-fetch';
@@ -73,7 +73,7 @@ export const Build = {
 					apiName,
 					to:apiName+'Params',
 					res:apiName+'Res',
-					vo:/List$/.test(apiName)?apiName+'Vo':'',
+					vo:/List/.test(apiName)?apiName+'Vo':'',
 					PostSchema:`paths['${api}']['post']`,
 					requestSchema: `Post['requestBody']['content']['application/json']`,
 					responseSchema: `Post['responses']['default']['content']['application/json']`,
