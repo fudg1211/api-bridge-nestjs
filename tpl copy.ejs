@@ -1,0 +1,16 @@
+<!--
+ * @Author: huajian
+ * @Date: 2022-04-30 10:42:10
+ * @LastEditors: huajian
+ * @LastEditTime: 2022-04-30 10:42:11
+ * @Description: 
+-->
+<% if(arg==='wx'){%>import { request } from 'xb-wx-request';<%}%>
+<% if(arg!=='wx'){%>import { Request as request } from '@go/go-request';<%}%>
+import {paths} from '../../api';
+type Post = <%- PostSchema%>;
+export type RequestSchema = <%- requestSchema%>;
+export type ResponseSchema = <%- responseSchema%>;
+export async function <%-apiName%>(<% if(requestSchema){%>data: RequestSchema<%}%>):Promise<ResponseSchema>{
+	return await request<ResponseSchema>('<%- api%>'<% if(requestSchema){%>,data<%}%>);
+}
